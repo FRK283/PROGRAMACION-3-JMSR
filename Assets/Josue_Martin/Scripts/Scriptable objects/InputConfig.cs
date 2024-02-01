@@ -14,7 +14,7 @@ public class InputConfig : ScriptableObject
 
    public KeyCode jumpKey = KeyCode.Escape;
    public KeyCode runKey = KeyCode.LeftShift;
-   public KeyCode ShootKey  = KeyCode.Mouse0;
+   public KeyCode shoot = KeyCode.Mouse0;
    public KeyCode reloadKey = KeyCode.R;
 
 }
