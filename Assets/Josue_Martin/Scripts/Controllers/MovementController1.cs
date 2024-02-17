@@ -8,11 +8,11 @@ public class Test : MonoBehaviour
 {
     [SerializeField] private InputSystem inputSystem;
 
-    [SerializeField] private float speed = 5;
-    [SerializeField] private float rotateSpeed = 12;
-    [SerializeField] private float walkingSpeed = 5;
-    [SerializeField] private float runningSpeed = 10;
-    [SerializeField] private float jumpForce = .1f;
+    [SerializeField] private float speed = 6;
+    [SerializeField] private float rotateSpeed = 17;
+    [SerializeField] private float walkingSpeed = 7;
+    [SerializeField] private float runningSpeed = 14;
+    [SerializeField] private float jumpForce = .2f;
 
     Vector2 moveDirection = Vector2.zero;
 
@@ -94,7 +94,7 @@ public class Test : MonoBehaviour
     void OldInputMovement()
     {
         playerRb.position += this.transform.rotation * new Vector3(x: 0, y: 0, z: OldMoveDirection().y) * (OldActualSpeed() * Time.deltaTime);
-        //transform.position += this.transform.rotation * new Vector3(x: 0, y: 0, z: OldMoveDirection().y) * (ActualSpeed() * Time.deltaTime);
+       
     }
 
     void OldInputRotation()
@@ -139,17 +139,17 @@ public class Test : MonoBehaviour
 
     private float OldActualSpeed()
     {
-        // Si estoy presionando el input de correr, va a regresar runningSpeed, si no va a regresar walkingSpeed
+        
         return InputHandler.RunInput() ? runningSpeed : walkingSpeed;
     }
 
     void NewJumpInput()
     {
-        //input.actions["Jump"].WasPressedThisFrame();
+        
         if (input.actions["Jump"].WasPressedThisFrame())
         {
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            Debug.Log("Salta nuevo");
+            Debug.Log("jump new");
         }
     }
 
@@ -158,7 +158,7 @@ public class Test : MonoBehaviour
         if (InputHandler.JumpInput())
         {
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            Debug.Log("Salta viejo");
+          Debug.Log("jump old ");
         }
     }
 
@@ -166,7 +166,7 @@ public class Test : MonoBehaviour
     {
         if (input.actions["Shoot"].WasPressedThisFrame())
         {
-            Debug.Log("Dispara nuevo");
+            Debug.Log("new shoot");
         }
     }
 
@@ -174,7 +174,7 @@ public class Test : MonoBehaviour
     {
         if (InputHandler.ShootInput())
         {
-            Debug.Log("Dispara viejo");
+            Debug.Log("old shoot ");
         }
     }
 
@@ -182,7 +182,7 @@ public class Test : MonoBehaviour
     {
         if (input.actions["Reload"].WasPressedThisFrame())
         {
-            Debug.Log("Recarga nuevo");
+            Debug.Log("new reload como persona  3 reload 2 de febrero solo en gamepass ");
         }
     }
 
@@ -190,7 +190,7 @@ public class Test : MonoBehaviour
     {
         if (InputHandler.ReloadInput())
         {
-            Debug.Log("Recarga viejo");
+            Debug.Log("Old reload ");
         }
     }
 }
