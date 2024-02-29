@@ -38,7 +38,8 @@ public class Spawner : MonoBehaviour
     {
     }
 
-    private void PoolStart() /
+    private void PoolStart()
+    {    
         enemyPool = new Queue<GameObject>();       
         for (int i = 0; i < totalAmountofEnemies; i++)
         {

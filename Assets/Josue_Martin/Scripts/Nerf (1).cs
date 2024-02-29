@@ -64,7 +64,7 @@ public class Nerf : MonoBehaviour
 
     private void Shooting()
     {
-        if (input.actions["Shoot"].WasPressedThisFrame() 
+        if (input.actions["Shoot"].WasPressedThisFrame())
         {
             Debug.Log("Disparando");
             wantToShoot = true;

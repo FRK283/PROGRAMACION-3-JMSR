@@ -21,6 +21,7 @@ public class TriggerEvent : MonoBehaviour
     {
         if (tagList.Contains(other.tag))
         {
+           
             onTriggerEnter.Invoke();
         }
     }
@@ -29,6 +30,7 @@ public class TriggerEvent : MonoBehaviour
     {
         if (tagList.Contains(other.tag))
         {
+          
             onTriggerExit.Invoke();
         }
 
