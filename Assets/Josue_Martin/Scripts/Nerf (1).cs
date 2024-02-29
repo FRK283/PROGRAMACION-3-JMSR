@@ -11,8 +11,6 @@ public class Nerf : MonoBehaviour
 
     private Action Shoot;
 
-    //[SerializeField, Tooltip("Aquí se van a poner los emptys de las Balas")]
-    //private GameObject bulletPrefab;
 
     [SerializeField, Tooltip("Aquí va a aparecer la bala")]
     private Transform gunPosition;
@@ -25,7 +23,7 @@ public class Nerf : MonoBehaviour
     [SerializeField, Tooltip("Te dice si quiere disparar")]
     bool wantToShoot = true;
 
-    [SerializeField] private float fuerzaBala; //la fuerza con la que el addforce va a lanzar 
+    [SerializeField] private float fuerzaBala; 
 
     [SerializeField] private Transform particles;
 
@@ -47,12 +45,7 @@ public class Nerf : MonoBehaviour
     [SerializeField, Tooltip("Daño del jugador")]
     internal float weaponDamage = 1;
 
-    //public Transform cameraOrigin; //en caso de que las balas salgan de la cámara, pero como este es tanque, que salga de la pistola 
-    //public float rayDistance;
-    //private RaycastHit hit;   //guarda la información de donde pegó el rayito
-    //public LayerMask hitMask;
-    //public float rayForce;
-    //public int rayDamage;
+   
 
     private void OnValidate()
     {
@@ -71,7 +64,7 @@ public class Nerf : MonoBehaviour
 
     private void Shooting()
     {
-        if (input.actions["Shoot"].WasPressedThisFrame() /*&& puedeDisparar == false && CanShoot() */)
+        if (input.actions["Shoot"].WasPressedThisFrame() 
         {
             Debug.Log("Disparando");
             wantToShoot = true;
@@ -141,25 +134,5 @@ public class Nerf : MonoBehaviour
         actualBullet.GetComponent<Rigidbody>().AddForce(transform.forward * fuerzaBala);
     } 
 
-    //private bool CanShoot()
-    //{
-    //    Debug.Log("Puede disparar es false");
-    //    EsperandoADisparar();
-    //    Debug.Log("Puede disparar es true");
-    //    return puedeDisparar = true;
-    //}
-
-    //private IEnumerator EsperandoADisparar()
-    //{
-    //    yield return new WaitForSeconds(cadenciaDeTiro);
-    //    puedeDisparar = true;
-    //}
-
-    //private void OnTriggerEnter(Collider enemy)
-    //{
-    //    if (enemy.CompareTag("Enemy"))
-    //    {
-    //        enemy.GetComponent<EnemyLife>().TakeDamage(playerDamage);  //aqu? estamos mandando al TakeDamage el damage, que es lo que est? dentro de los par?ntesis
-    //    }
-    //}
+    
 }

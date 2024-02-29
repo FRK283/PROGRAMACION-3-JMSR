@@ -35,20 +35,16 @@ public class EnemyLife : MonoBehaviour
     }
     private void TakeDamage()
     {
-        //AudioManager.Instance.PlayMusic("Hit");
+        
         vida -= receivedDamage;
         Debug.Log(vida + " - " + receivedDamage);
-        //rend.material = danioMaterial;
-        //lastimao = true;
-        //StartCoroutine(daniTime());
-
+      
         if (vida <= 0)
         {
-            //Destroy(this.gameObject);
+          
             vida = 0;
             Debug.Log("Te va a decir que murió");
             haMuerto = true;
-            //spawner.GetComponent<Spawner>().EnemigoMuerto(true);
             Debug.Log("Ya murió");
         }
 
