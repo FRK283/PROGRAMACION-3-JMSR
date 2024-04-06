@@ -39,7 +39,7 @@ public class Test : MonoBehaviour
                     Rotation = OldInputRotation;
                     Jump = OldInputJump;
                     Shoot = OldShootJump;
-                    Reload = OldReloadJump;
+                    Reload = OldReload;
                     break;
                 }
 
@@ -172,7 +172,7 @@ public class Test : MonoBehaviour
 
     void OldShootJump()
     {
-        if (InputHandler.ShootInput())
+        if (InputHandler.ShootKey())
         {
             Debug.Log("old shoot ");
         }
@@ -186,9 +186,9 @@ public class Test : MonoBehaviour
         }
     }
 
-    void OldReloadJump()
+    void OldReload()
     {
-        if (InputHandler.ReloadInput())
+        if (InputHandler.Reload())
         {
             Debug.Log("Old reload ");
         }

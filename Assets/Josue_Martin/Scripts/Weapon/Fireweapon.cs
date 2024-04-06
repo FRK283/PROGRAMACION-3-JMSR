@@ -1,14 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
-public class Fireweapon : MonoBehaviour
+namespace WEAPON
 {
-    protected int actualAmmo;
-    protected int maxlAmmo;
-    protected int magazineAmmo;
+    public class FireWeapon : Weapon
+    {
 
-    protected float  fireRate;
-    protected float reloadTime;
-  
+        protected int actualAmmo;
+        protected int maxAmmo;
+        protected int magazineAmmo;
+
+        protected float fireRate;
+
+        protected float reloadTime;
+
+        internal virtual void Reload()
+        {
+
+        }
+
+        internal override void Aim()
+        {
+
+        }
+
+    }
 }

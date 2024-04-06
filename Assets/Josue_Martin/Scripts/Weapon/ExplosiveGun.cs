@@ -4,21 +4,13 @@ using UnityEngine;
 
 namespace WEAPON
 {
-    public class Shotgun : FireWeapon
+
+    public class ExplosiveGun : FireWeapon
     {
 
-        protected float spread;
-        protected int birdShot; // Perdigones
+        protected Sprite explosionArea; // Proyectar una imagen en el hit.point del Aim, que muestra donde va a caer
+        protected GameObject proyectile; // Disparo fisico, con raycast puede ser donde va a caer
 
-        protected Sprite spreadRange;
-
-        protected Transform[] birdShotOrigin;
-
-        /// <summary>
-        /// Aqui lo que tienen que hacer, es tener minimo 9
-        /// raycast, estos saldran de el arreglo de BirdShotOrigin
-        /// Al disparar deben de dispersarse una distancia aleatoria de 0 a spreadRange
-        /// </summary>
         internal override void SingleShot()
         {
             base.SingleShot();
@@ -35,6 +27,7 @@ namespace WEAPON
         {
             Debug.Log("Apuntando con " + name);
         }
+        
 
     }
 }

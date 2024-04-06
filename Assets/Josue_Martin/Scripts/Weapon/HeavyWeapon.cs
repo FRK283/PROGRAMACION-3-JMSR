@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HeavyWeapon : MonoBehaviour
+namespace WEAPON
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public class HeavyWeapon : MeleeWeapon
     {
-        
+
+        internal override void MeleeAttack()
+        {
+            Debug.Log("Ataque basico con " + name);
+        }
+
+        // Se agrego este
+        internal override void ChargedMeleeAttack()
+        {
+            base.ChargedMeleeAttack();
+            Debug.Log("Ataque cargado con " + name);
+        }
+
+
     }
 }
