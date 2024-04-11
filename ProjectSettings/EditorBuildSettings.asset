@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Josue_Martin/Scenes/JMSR ESCENA.unity
+    guid: bbe58556e6e72aa47a693fcc0c794455
   m_configObjects: {}
