@@ -1,145 +1,206 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-
-namespace JosueMartin
+public class MovementController : MonoBehaviour
 {
+    [SerializeField] private InputSystem inputSystem;
 
-    //Este personaje, va a caminar, correr, saltar y agacharse
-    public class MovementController : MonoBehaviour
+    [SerializeField] private float movementSpeed = 5f;
+    [SerializeField] private float rotationSpeed = 5f;
+
+    Vector2 moveDirection = Vector2.zero;
+    Vector2 rotateDirection = Vector2.zero;
+
+    private Action Movement;
+    private Action Rotation;
+
+    private PlayerInput input;
+
+    [SerializeField] private Animator animator;
+
+
+    //#if UNITY_EDITOR        //que esto así porque funciona en el editor nada más
+
+    //    private void OnValidate()
+    //    {
+    //        switch (inputSystem)
+    //        {
+    //            case InputSystem.OldInputSystem:
+    //                {
+    //                    Movement = OldInputSystemMovement;
+    //                    Rotation = OldInputSystemRotation;
+    //                    break;
+    //                }
+
+    //            case InputSystem.NewInputSystem:
+    //                {
+    //                    Movement = NewInputSystemMovement;
+    //                    Rotation = NewInputSystemRotation;
+    //                    break;
+    //                }
+    //        }
+    //    }
+
+    //#endif
+
+    private void Start()            //y que esto lo pongamos en el Start porque si no no hace nada
+    {
+        Debug.Log("Hola start");
+        input = GetComponent<PlayerInput>();
+
+        switch (inputSystem)
+        {
+            case InputSystem.OldInputSystem:
+                {
+                    Movement = OldInputSystemMovement;
+                    Rotation = OldInputSystemRotation;
+                    break;
+                }
+
+            case InputSystem.NewInputSystem:
+                {
+                    Movement = NewInputSystemMovement;
+                    Rotation = NewInputSystemRotation;
+                    break;
+                }
+        }
+    }
+
+    private void FixedUpdate()   //que lo cambiemos a FixUpdate
+    {
+        Movement();
+        Rotation();
+    }
+
+    #region New Input System
+
+    private void NewInputSystemMovement()
+    {
+        transform.position += this.transform.rotation * new Vector3(0, 0, NewInputSystemMovementDirection()) * (movementSpeed * Time.deltaTime);
+    }
+
+    private void NewInputSystemRotation()
     {
 
-        [Header("Variables de Movimiento")]
-        [SerializeField] private float walkingSpeed;
-        [SerializeField] private float runningSpeed;
-
-        [SerializeField] private float jumpingForce;
-
-        [SerializeField] private float crouchHeight;
-        [SerializeField] private float crouchingSpeed;
-
-        [Header("Deteccion del suelo")]
-        [SerializeField] private Transform rayOrigin;
-        [SerializeField] private float rayRange;
-        [SerializeField] private LayerMask rayLayers;
-
-        private Rigidbody rb;
-
-        private void Awake()
-        {
-            rb = GetComponent<Rigidbody>();
-        }
-
-        private void Update()
-        {
-            Move();
-            Jump();
-        }
-
-        #region Movement
-
-        // En los metodos, la primera letra de cada palabra en Mayuscula
-        private void Move()
-        {
-            rb.velocity += new Vector3(HorizontalMove(), 0, VerticalMove()) * ActualSpeed() * Time.deltaTime;
-        }
-
-        // Variables cuyo valor puedes modificar dentro de las mismas
-
-        private float HorizontalMove()
-        {
-            return Input.GetAxis("Horizontal"); // Si estoy presionando A va a regresar -1. Si presiono D va a regresar 1
-        }
-
-        private float VerticalMove()
-        {
-            return Input.GetAxis("Vertical"); // Si estoy presionando S va a regresar -1. Si presiono W va a regresar 1
-        }
-
-        private float ActualSpeed()
-        {
-            // Si estoy presionando el input de correr, va a regresar runningSpeed, si no va a regresar walkingSpeed
-            return RunInputPressed() ? runningSpeed : walkingSpeed;
-        }
-
-        private bool RunInputPressed()
-        {
-            return Input.GetKey(KeyCode.LeftShift); // Si estoy presionando shift izquierdo va a regresar True, y si no Falso
-        }
-
-        #endregion
-
-        #region Jump
-
-        private void Jump()
-        {
-            if (JumpInput() && IsTouchingGround())
-            {
-                rb.AddForce(Vector3.up * jumpingForce, ForceMode.Impulse);
-            }
-        }
-
-        private bool JumpInput()
-        {
-            return Input.GetKeyDown(KeyCode.Space);
-        }
-
-        /// <summary>
-        /// Hay un raycast o rayo, que nos sirve para saber si el jugador esta tocando o no el suelo
-        /// 
-        /// El raycast, prinicpalmente necesita de
-        /// 
-        /// Origen: Es de donde sale el rayo
-        /// 
-        /// Direccion: Es hacia donde apunta el rayo
-        /// 
-        /// Rango: Es el alcance o longitud del rayo
-        /// 
-        /// Layers: Que layers puede o debe detectar el rayo
-        /// 
-        /// -------------------------------------------------------
-        /// 
-        /// Hit: Te devuelve el objeto exacto que esta tocando el rayo
-        /// 
-        /// </summary>
-        private bool IsTouchingGround()
-        {
-            return Physics.Raycast(rayOrigin.position, Vector3.down, rayRange, rayLayers);
-        }
-
-        /// <summary>
-        /// On Draw Gizmos unicamente dibuja lineas o figuras en el editor
-        /// Estas lineas o figuras son meramente representativas, y no tienen ningun efecto sobre el juego
-        /// 
-        /// NO NOS SIRVE PARA DETECTAR EL SUELO
-        /// </summary>
-        private void OnDrawGizmos()
-        {
-            Gizmos.DrawRay(rayOrigin.position, Vector3.down * rayRange);
-        }
-
-        #endregion
-
-        private void Crouch()
-        {
-
-        }
-
-        private bool CrouchInput()
-        {
-            return Input.GetKey(KeyCode.LeftControl);
-        }
-
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.tag == "Damage")
-            {
-                GetComponent<IDamageable>().TakeDamage(5);
-            }
-        }
+        transform.Rotate(new Vector3(0, NewInputSystemRotationDirection(), 0) * (rotationSpeed * Time.deltaTime));
 
     }
 
+    private float NewInputSystemMovementDirection()
+    {
+
+        return input.actions["Move"].ReadValue<Vector2>().y;
+
+    }
+
+    private float NewInputSystemRotationDirection()
+    {
+
+        return input.actions["Move"].ReadValue<Vector2>().x;
+
+    }
+
+    #endregion
+
+    #region Old Input System
+
+    private void OldInputSystemRotation()
+    {
+        transform.Rotate(new Vector3(0, OldSystemRotationDirection().x, 0) * (rotationSpeed * Time.deltaTime));
+    }
+
+    private void OldInputSystemMovement()
+    {
+        transform.position += this.transform.rotation * new Vector3(0, 0, OldSystemMovementDirection().y) * (movementSpeed * Time.deltaTime);
+    }
+
+    private Vector2 OldSystemMovementDirection()
+    {
+        moveDirection = Vector2.zero;
+
+        if (InputHandler.MoveForwardInput())
+        {
+
+            moveDirection += Vector2.up;
+
+            animator.Play("Walking");
+
+        }
+
+        if (InputHandler.MoveBackwardInput())
+        {
+
+            moveDirection += Vector2.down;
+
+            animator.Play("Walking");
+
+        }
+
+        //if (!InputHandler.MoveForwardInput() && !InputHandler.MoveBackwardInput())    QUITA ESTE, que porque el signo ! significa que no estás tocando el input,
+        //pero si no lo tocaste no deberías tener un if para no tocarlo.
+        //{
+
+        //    moveDirection = Vector2.zero;
+
+        //}
+
+        return moveDirection.normalized;
+
+    }
+
+    private Vector2 OldSystemRotationDirection()
+    {
+        rotateDirection = Vector2.zero;     //LE PONEMOS EL ZERO PARA QUE TENGA UNA RESPUESTA, PARA QUE NO SEA NULO
+
+        if (InputHandler.RotateRightInput())
+        {
+
+            rotateDirection += Vector2.right;
+
+        }
+        if (InputHandler.RotateLeftInput())
+        {
+
+            rotateDirection += Vector2.left;
+
+        }
+        //if (!InputHandler.RotateRightInput() && !InputHandler.RotateLeftInput())    QUITAMOS ESTE IF 
+        //{
+
+        //    rotateDirection = Vector2.zero;
+
+        //}
+
+        return rotateDirection.normalized;
+
+    }
+
+    #endregion
+
+
+    public void TriggerEnter()
+    {
+        Debug.Log(gameObject.name + " entro en un trigger");
+    }
+
+    public void TriggerExit()
+    {
+        Debug.Log(gameObject.name + " salio de un trigger");
+
+    }
+
+    public void TriggerStay()
+    {
+        Debug.Log(gameObject.name + " esta en un trigger");
+    }
+
+
+}
+
+public enum InputSystem
+{
+    OldInputSystem, NewInputSystem
 }
