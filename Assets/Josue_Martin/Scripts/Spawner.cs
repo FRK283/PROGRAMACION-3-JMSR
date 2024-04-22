@@ -4,93 +4,95 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Spawner : MonoBehaviour
+namespace WEAPON
 {
-    [Header("Variables")]
-
-    [Tooltip("Aquí se van a poner los emptys con de spawnpoint")]
-    [SerializeField] private Transform[] spawnPoints;
-
-    [SerializeField] private GameObject enemy;
-
-    [SerializeField, Tooltip("Cantidad de enemigos en la ronda")] 
-    private int amountofEnemies;
-
-    [SerializeField, Tooltip("Cantidad de enemigos que tendremos a disposición")] 
-    private int totalAmountofEnemies;
-
-    [SerializeField] private float spawnRate;
-
-    [SerializeField] private Queue<GameObject> enemyPool;
-
-    [SerializeField] Transform poolParent;
-
-    [SerializeField] bool haMuerto = true;
-
-
-    private void Start()
+    public class Spawner : MonoBehaviour
     {
-       
-        PoolStart();
-    }
+        [Header("Variables")]
 
-    private void Update()
-    {
-    }
+        [Tooltip("Aquí se van a poner los emptys con de spawnpoint")]
+        [SerializeField] private Transform[] spawnPoints;
 
-    private void PoolStart()
-    {    
-        enemyPool = new Queue<GameObject>();       
-        for (int i = 0; i < totalAmountofEnemies; i++)
+        [SerializeField] private GameObject enemy;
+
+        [SerializeField, Tooltip("Cantidad de enemigos en la ronda")]
+        private int amountofEnemies;
+
+        [SerializeField, Tooltip("Cantidad de enemigos que tendremos a disposición")]
+        private int totalAmountofEnemies;
+
+        [SerializeField] private float spawnRate;
+
+        [SerializeField] private Queue<GameObject> enemyPool;
+
+        [SerializeField] Transform poolParent;
+
+        [SerializeField] bool haMuerto = true;
+
+
+        private void Start()
         {
-            GameObject enemy = Instantiate(this.enemy);
-            enemy.name = "Enemy" + i;
-            enemy.transform.parent = poolParent;       
-            enemyPool.Enqueue(enemy);                  
-            enemy.SetActive(false); 
+
+            PoolStart();
         }
 
-        StartCoroutine(SpawnEnemiesQueue());
-    }
-
-    private IEnumerator SpawnEnemiesQueue()
-    {
-        for (int i = 0; i < amountofEnemies; i++) 
+        private void Update()
         {
-            StartCoroutine(CallEnemy(CalledEnemy())); 
-            yield return new WaitForSeconds(spawnRate);
         }
+
+        private void PoolStart()
+        {
+            enemyPool = new Queue<GameObject>();
+            for (int i = 0; i < totalAmountofEnemies; i++)
+            {
+                GameObject enemy = Instantiate(this.enemy);
+                enemy.name = "Enemy" + i;
+                enemy.transform.parent = poolParent;
+                enemyPool.Enqueue(enemy);
+                enemy.SetActive(false);
+            }
+
+            StartCoroutine(SpawnEnemiesQueue());
+        }
+
+        private IEnumerator SpawnEnemiesQueue()
+        {
+            for (int i = 0; i < amountofEnemies; i++)
+            {
+                StartCoroutine(CallEnemy(CalledEnemy()));
+                yield return new WaitForSeconds(spawnRate);
+            }
+        }
+
+        private IEnumerator CallEnemy(GameObject enemy)
+        {
+            yield return new WaitUntil(() => enemy.GetComponent<EnemyLifeDef>().haMuerto );
+
+
+            Debug.Log("Va a murió el mono " + enemy.name);
+            enemyPool.Enqueue(enemy);
+            enemy.GetComponent<EnemyLifeDef>().haMuerto = false;
+            enemy.SetActive(false);
+            Debug.Log("Esto nos dice si sí se pudo apagar el mono");
+            yield return new WaitForSeconds(1);
+
+
+        }
+
+        private GameObject CalledEnemy()
+        {
+            GameObject enemyToSpawn = enemyPool.Dequeue();
+            enemyToSpawn.SetActive(true);
+            enemyToSpawn.transform.position = RandomSpawn().position;
+            return enemyToSpawn;
+        }
+
+
+        private Transform RandomSpawn()
+        {
+            int randomSpawn = Random.Range(0, spawnPoints.Length);
+            return spawnPoints[randomSpawn];
+        }
+
     }
-
-    private IEnumerator CallEnemy(GameObject enemy) 
-    {
-        yield return new WaitUntil(() => enemy.GetComponent<EnemyLife>().haMuerto || enemy.GetComponent<DeteccionRango>().jugadorRango);
-        
-        
-        Debug.Log("Va a murió el mono " + enemy.name);
-        enemyPool.Enqueue(enemy) ;                  
-        enemy.GetComponent<EnemyLife>().haMuerto = false;
-        enemy.GetComponent<DeteccionRango>().jugadorRango = false;
-        enemy.SetActive(false);
-        Debug.Log("Esto nos dice si sí se pudo apagar el mono");
-        yield return new WaitForSeconds(1);
-
-      
-    }
-
-    private GameObject CalledEnemy()
-    {
-        GameObject enemyToSpawn = enemyPool.Dequeue(); 
-        enemyToSpawn.SetActive(true);                   
-        enemyToSpawn.transform.position = RandomSpawn().position;     
-        return enemyToSpawn;                           
-    }
-
-
-    private Transform RandomSpawn()
-    {
-        int randomSpawn = Random.Range(0, spawnPoints.Length);
-        return spawnPoints[randomSpawn];
-    }
-
 }

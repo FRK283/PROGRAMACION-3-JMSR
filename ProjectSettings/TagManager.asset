@@ -8,6 +8,7 @@ TagManager:
   - Recollectable
   - Bla
   - Balas
+  - Enemy
   layers:
   - Default
   - TransparentFX

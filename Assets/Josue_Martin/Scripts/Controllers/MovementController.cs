@@ -22,31 +22,9 @@ public class MovementController : MonoBehaviour
     [SerializeField] private Animator animator;
 
 
-    //#if UNITY_EDITOR        //que esto así porque funciona en el editor nada más
+    
 
-    //    private void OnValidate()
-    //    {
-    //        switch (inputSystem)
-    //        {
-    //            case InputSystem.OldInputSystem:
-    //                {
-    //                    Movement = OldInputSystemMovement;
-    //                    Rotation = OldInputSystemRotation;
-    //                    break;
-    //                }
-
-    //            case InputSystem.NewInputSystem:
-    //                {
-    //                    Movement = NewInputSystemMovement;
-    //                    Rotation = NewInputSystemRotation;
-    //                    break;
-    //                }
-    //        }
-    //    }
-
-    //#endif
-
-    private void Start()            //y que esto lo pongamos en el Start porque si no no hace nada
+    private void Start()            
     {
         Debug.Log("Hola start");
         input = GetComponent<PlayerInput>();
@@ -126,7 +104,7 @@ public class MovementController : MonoBehaviour
 
             moveDirection += Vector2.up;
 
-            animator.Play("Walking");
+            
 
         }
 
@@ -135,7 +113,7 @@ public class MovementController : MonoBehaviour
 
             moveDirection += Vector2.down;
 
-            animator.Play("Walking");
+            
 
         }
 
