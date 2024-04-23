@@ -5,16 +5,10 @@ using static UnityEngine.ParticleSystem;
 
 namespace WEAPON
 {
-    /// <summary>
-    /// TAREA
-    /// 
-    /// Que hagamos esta arma también
-    /// </summary>
+    
     public class HandGun : FireWeapon
     {
-        //de este falta implementae el trailrenderer y la mira. Del automatic es practicamente lo mismo que este
-        //falta la mira, y tenemos que hacer que los valores sean visibles en el editor. Y con eso queda el automatic.
-        //Para el shotgun hay que seguir el tutorial de spread. Y para el explosive hay que buscar un tutorial 
+        
         [Header("General")]
         [SerializeField] protected TrailRenderer gunLaser;
         [SerializeField] private Transform raycastOrigin;
@@ -24,15 +18,8 @@ namespace WEAPON
         [Header("Shoot parameters")]
         [SerializeField] private float rayDistance = 100; //fire range, hasta dónde llega
         [SerializeField] private float rayForce = 500;
-        //[SerializeField] private int damage = 1;
-        //[SerializeField] private int actualAmmo = 5; //la cantidad de balas que tiene actualmente
-        //[SerializeField] private float fireRate = 0.06f; //es la velocidad del disparo 
-        //[SerializeField] private int maxAmmo = 8; //la cantidad máxima de balas que puede tener el arma
-
         [Header("Reload parameters")]
-        //[SerializeField] private int magazineAmmo;
-        //[SerializeField] private float reloadTime = 1.5f; //los segundos que se tarda en recargar el arma
-
+        
         private float lastTimeShoot = Mathf.NegativeInfinity;
 
         private void Start()
@@ -49,6 +36,9 @@ namespace WEAPON
 
         internal override void SingleShot() //disparo con raycast
         {
+
+          
+
             if (lastTimeShoot + fireRate < Time.time) //este te dice si puedes disparar porque ya pasó el tiempo del last time shot
             {
                 if (actualAmmo >= 1)                    //este te dice si tienes balas
@@ -76,8 +66,11 @@ namespace WEAPON
 
                         if (hit.transform.CompareTag("Enemy"))
                         {
-                            Debug.Log("Golpeaste a un enemigo");
+                           // hit.collider.gameObject.SetActive(false);
+
                             hit.transform.GetComponent<EnemyLifeDef>().TakeDamage(damage); //aquí estamos mandando al TakeDamage el damage, que es lo que está dentro de los paréntesis
+                            Debug.Log("Golpeaste a un enemigo");
+
                         }
 
                         lastTimeShoot = Time.time;
