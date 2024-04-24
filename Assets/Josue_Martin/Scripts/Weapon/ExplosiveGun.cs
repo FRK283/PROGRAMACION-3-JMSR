@@ -8,13 +8,16 @@ namespace WEAPON
     public class ExplosiveGun : FireWeapon
     {
 
-
         [Header("General")]
         [SerializeField] protected TrailRenderer gunLaser;
         [SerializeField] private Transform raycastOrigin;
         private RaycastHit hit;
         [SerializeField] private LayerMask hitMask;
-        [SerializeField] private GameObject bulletPrefabSprite;
+        public GameObject impactParticlesPrefab;
+
+        public GameObject bulletPrefab; // Prefab de la bala
+        public Transform firePoint; // Punto desde el cual se lanzará la bala
+        public float bulletSpeed = 10f; // Velocidad de la bala
 
 
         [Header("Shoot parameters")]
@@ -27,10 +30,10 @@ namespace WEAPON
         private void Start()
         {
             damage = 10;
-            actualAmmo = 1;
+            actualAmmo = 8;
             fireRate = 0.2f;
-            maxAmmo = 5;
-            magazineAmmo = 5;
+            maxAmmo = 12;
+            magazineAmmo = 13;
             reloadTime = 1.5f;
 
             actualAmmo = maxAmmo;
@@ -50,17 +53,28 @@ namespace WEAPON
 
                     TrailRenderer trail = Instantiate(gunLaser, raycastOrigin.position, Quaternion.identity);
 
+                    // Instanciar la bala en el punto de fuego
+                    GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
+                    // Obtener el Rigidbody de la bala
+                    Rigidbody rb = bullet.GetComponent<Rigidbody>();
+
+                    // Aplicar velocidad a la bala
+                    rb.velocity = firePoint.forward * bulletSpeed;
+
+                    // Destruir la bala después de un tiempo si no golpea nada
+                    Destroy(bullet, 2f);
+
                     StartCoroutine(SpawnTrail(trail, hit));
 
                     actualAmmo--;
 
-                    if (hit.transform != null)          
+                    if (hit.transform != null)
                     {
-                        GameObject bulletholeClone = Instantiate(bulletPrefabSprite, hit.point + hit.normal * 0.001f, Quaternion.LookRotation(hit.normal));
-                        Destroy(bulletholeClone, 4f);
-
                         if (hit.transform)
                         {
+                            Instantiate(impactParticlesPrefab, hit.point, Quaternion.identity);
+
                             Debug.Log("Disparaste a " + hit.transform.name);
                         }
 
@@ -72,6 +86,8 @@ namespace WEAPON
                         if (hit.transform.CompareTag("Enemy"))
                         {
                             // hit.collider.gameObject.SetActive(false);
+
+                            Instantiate(impactParticlesPrefab, hit.point, Quaternion.identity);
 
                             hit.transform.GetComponent<EnemyLifeDef>().TakeDamage(damage); //aquí estamos mandando al TakeDamage el damage, que es lo que está dentro de los paréntesis
                             Debug.Log("Golpeaste a un enemigo");
@@ -130,6 +146,5 @@ namespace WEAPON
         {
             Debug.Log("Apuntando con " + name);
         }
-
     }
 }

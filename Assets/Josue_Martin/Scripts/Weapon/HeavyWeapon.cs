@@ -8,18 +8,18 @@ namespace WEAPON
     public class HeavyWeapon : MeleeWeapon
     {
 
-        internal override void MeleeAttack()
+        // Etiqueta para identificar los enemigos
+        public string etiquetaEnemigo = "Enemy";
+
+        private void OnCollisionEnter(Collision collision)
         {
-            Debug.Log("Ataque basico con " + name);
+            // Verificar si la colisión es con un objeto que tiene la etiqueta de enemigo
+            if (collision.gameObject.CompareTag(etiquetaEnemigo))
+            {
+                // Desactivar el GameObject del enemigo
+                collision.gameObject.SetActive(false);
+            }
         }
-
-        // Se agrego este
-        internal override void ChargedMeleeAttack()
-        {
-            base.ChargedMeleeAttack();
-            Debug.Log("Ataque cargado con " + name);
-        }
-
-
     }
+
 }
