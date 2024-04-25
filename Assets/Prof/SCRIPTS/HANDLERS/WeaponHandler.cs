@@ -28,6 +28,9 @@ namespace WEAPON
         private Action? WeaponAim;
         private Action? Reload;
 
+        public GameObject[] armas; // Arreglo de GameObjects que representan tus armas
+        private int armaActual = 0;
+
         #region Core
 
         private void Start()
@@ -45,22 +48,51 @@ namespace WEAPON
 
         #endregion
 
+       
+
         private void SwitchWeapon()
         {
-            if(InputHandler.Scroll() > 0) // 1 Significa que scrollee hacia arriba
+            
+            if (InputHandler.Scroll() > 0) // 1 Significa que scrollee hacia arriba
             {
+                CambiarArma(1);
                 currentWeaponIndex++;
                 currentWeaponIndex = currentWeaponIndex >= weapons.Length ? 0 : currentWeaponIndex; 
-                currentWeapon = weapons[currentWeaponIndex];
+                currentWeapon = weapons[currentWeaponIndex];   
                 SwitchFunction();
             }
             else if(InputHandler.Scroll() < 0)  // -1 Significa que scrollee hacia abajo
             {
+                CambiarArma(-1); // Cambiar al arma anterior
+
                 currentWeaponIndex--;
                 currentWeaponIndex = currentWeaponIndex < 0 ?  weapons.Length-1 : currentWeaponIndex;
                 currentWeapon = weapons[currentWeaponIndex];
                 SwitchFunction();
             }
+
+           
+
+        }
+
+        void CambiarArma(int cambio)
+        {
+            // Desactivar el GameObject del arma actual
+            armas[armaActual].SetActive(false);
+
+            // Calcular el nuevo índice del arma
+            armaActual += cambio;
+            if (armaActual < 0)
+            {
+                armaActual = armas.Length - 1;
+            }
+            else if (armaActual >= armas.Length)
+            {
+                armaActual = 0;
+            }
+
+            // Activar el GameObject del nuevo arma
+            armas[armaActual].SetActive(true);
         }
 
         private void SwitchFunction()

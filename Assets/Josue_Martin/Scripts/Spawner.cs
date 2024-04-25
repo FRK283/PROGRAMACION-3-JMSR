@@ -69,11 +69,9 @@ namespace WEAPON
             yield return new WaitUntil(() => enemy.GetComponent<EnemyLifeDef>().haMuerto );
 
 
-            Debug.Log("Va a murió el mono " + enemy.name);
             enemyPool.Enqueue(enemy);
             enemy.GetComponent<EnemyLifeDef>().haMuerto = false;
             enemy.SetActive(false);
-            Debug.Log("Esto nos dice si sí se pudo apagar el mono");
             yield return new WaitForSeconds(1);
 
 

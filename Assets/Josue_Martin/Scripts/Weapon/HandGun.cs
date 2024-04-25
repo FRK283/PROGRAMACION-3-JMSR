@@ -16,7 +16,7 @@ namespace WEAPON
         [SerializeField] private LayerMask hitMask;
 
         [Header("Shoot parameters")]
-        [SerializeField] private float rayDistance = 100; //fire range, hasta dónde llega
+        [SerializeField] private float rayDistance = 100; 
         [SerializeField] private float rayForce = 500;
         [Header("Reload parameters")]
         
@@ -34,16 +34,16 @@ namespace WEAPON
             actualAmmo = maxAmmo;
         }
 
-        internal override void SingleShot() //disparo con raycast
+        internal override void SingleShot() 
         {
 
           
 
-            if (lastTimeShoot + fireRate < Time.time) //este te dice si puedes disparar porque ya pasó el tiempo del last time shot
+            if (lastTimeShoot + fireRate < Time.time) 
             {
-                if (actualAmmo >= 1)                    //este te dice si tienes balas
+                if (actualAmmo >= 1)                   
                 {
-                    Debug.Log("Disparo básico con " + name);
+                   
                     Physics.Raycast(raycastOrigin.position, raycastOrigin.forward, out hit, rayDistance, hitMask);
 
                     TrailRenderer trail = Instantiate(gunLaser, raycastOrigin.position, Quaternion.identity);
@@ -54,10 +54,7 @@ namespace WEAPON
 
                     if (hit.transform != null)
                     {
-                        if (hit.transform)
-                        {
-                            Debug.Log("Disparaste a " + hit.transform.name);
-                        }
+
 
                         if (hit.rigidbody != null)
                         {
@@ -66,10 +63,8 @@ namespace WEAPON
 
                         if (hit.transform.CompareTag("Enemy"))
                         {
-                           // hit.collider.gameObject.SetActive(false);
 
-                            hit.transform.GetComponent<EnemyLifeDef>().TakeDamage(damage); //aquí estamos mandando al TakeDamage el damage, que es lo que está dentro de los paréntesis
-                            Debug.Log("Golpeaste a un enemigo");
+                            hit.transform.GetComponent<EnemyLifeDef>().TakeDamage(damage); 
 
                         }
 
@@ -99,31 +94,23 @@ namespace WEAPON
 
 
         internal override void Reload()
-        {
-            //comenzar animación de recarga
-            Debug.Log("Recargando " + name);
-            StartCoroutine(WaintingReloading());
-            Debug.Log("Recargando " + name + " " + actualAmmo + " " + magazineAmmo);
+        {    
+            StartCoroutine(WaintingReloading()); 
             actualAmmo = actualAmmo + magazineAmmo;
-            Debug.Log(name + " " + actualAmmo);
 
             if (actualAmmo > maxAmmo)
             {
                 actualAmmo = maxAmmo;
             }
-            Debug.Log(actualAmmo);
-            //terminar animación de recarga
         }
 
         IEnumerator WaintingReloading()
         {
             yield return new WaitForSeconds(reloadTime);
-            Debug.Log("Recargada " + name);
         }
 
         internal override void Aim() //la mira es la parte visual del raycast
         {
-            Debug.Log("Apuntando con " + name);
         }
     }
 

@@ -19,14 +19,12 @@ public class MovementController : MonoBehaviour
 
     private PlayerInput input;
 
-    [SerializeField] private Animator animator;
 
 
     
 
     private void Start()            
     {
-        Debug.Log("Hola start");
         input = GetComponent<PlayerInput>();
 
         switch (inputSystem)
@@ -104,8 +102,6 @@ public class MovementController : MonoBehaviour
 
             moveDirection += Vector2.up;
 
-            
-
         }
 
         if (InputHandler.MoveBackwardInput())
@@ -113,17 +109,9 @@ public class MovementController : MonoBehaviour
 
             moveDirection += Vector2.down;
 
-            
-
         }
 
-        //if (!InputHandler.MoveForwardInput() && !InputHandler.MoveBackwardInput())    QUITA ESTE, que porque el signo ! significa que no estás tocando el input,
-        //pero si no lo tocaste no deberías tener un if para no tocarlo.
-        //{
-
-        //    moveDirection = Vector2.zero;
-
-        //}
+       
 
         return moveDirection.normalized;
 
@@ -131,7 +119,7 @@ public class MovementController : MonoBehaviour
 
     private Vector2 OldSystemRotationDirection()
     {
-        rotateDirection = Vector2.zero;     //LE PONEMOS EL ZERO PARA QUE TENGA UNA RESPUESTA, PARA QUE NO SEA NULO
+        rotateDirection = Vector2.zero;     
 
         if (InputHandler.RotateRightInput())
         {
@@ -145,12 +133,7 @@ public class MovementController : MonoBehaviour
             rotateDirection += Vector2.left;
 
         }
-        //if (!InputHandler.RotateRightInput() && !InputHandler.RotateLeftInput())    QUITAMOS ESTE IF 
-        //{
-
-        //    rotateDirection = Vector2.zero;
-
-        //}
+        
 
         return rotateDirection.normalized;
 
